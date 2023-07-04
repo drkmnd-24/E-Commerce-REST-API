@@ -2,26 +2,21 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-class Category(models.Model):
-    name = models.CharField(max_length=100)
-
-    def __str__(self):
-        return self.name
-
-
-class Brand(models.Model):
-    name = models.CharField(max_length=100)
-
-    def __str__(self):
-        return self.name
+class Category(models.TextChoices):
+    ELECTRONICS = 'Electronics'
+    LAPTOPS = 'Laptops'
+    ARTS = 'Arts'
+    FOOD = 'Food'
+    HOME = 'Home'
+    KITCHEN = 'Kitchen'
 
 
 class Product(models.Model):
     name = models.CharField(max_length=200, default='', blank=False)
     description = models.TextField(default='', blank=True)
     price = models.DecimalField(max_digits=7, decimal_places=2, default=0)
-    brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    brand = models.CharField(max_length=200, default='', blank=False)
+    category = models.CharField(max_length=30, choices=Category.choices)
     ratings = models.DecimalField(max_digits=3, decimal_places=2, default=0)
     stock = models.IntegerField(default=0)
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
