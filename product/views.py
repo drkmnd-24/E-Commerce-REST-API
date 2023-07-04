@@ -4,6 +4,7 @@ from product.api.filters import ProductFilter
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework.pagination import PageNumberPagination
 
 from rest_framework import status
 
@@ -11,8 +12,13 @@ from rest_framework import status
 @api_view(['GET'])
 def get_products_list(request):
     filterset = ProductFilter(request.GET, queryset=Product.objects.all().order_by('id'))
-    serializer = ProductSerializer(filterset.qs, many=True)
-    return Response(serializer.data, status=status.HTTP_200_OK)
+    count = filterset.qs.count()
+    resPerPage = 1
+    paginator = PageNumberPagination()
+    paginator.page_size = resPerPage
+    queryset = paginator.paginate_queryset(filterset.qs, request)
+    serializer = ProductSerializer(queryset, many=True)
+    return Response({'product': serializer.data, 'count': count, 'resPerPage': resPerPage}, status=status.HTTP_200_OK)
 
 
 @api_view(['GET'])
