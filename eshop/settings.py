@@ -26,8 +26,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = os.environ.get('DEBUG') == 'True'
-DEBUG = False
+DEBUG = os.environ.get('DEBUG') == 'True'
+# DEBUG = False
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
@@ -91,6 +91,10 @@ DATABASES = {
         "HOST": os.environ.get('DATABASE_HOST'),
         "PORT": os.environ.get('DATABASE_PORT'),
     }
+}
+
+REST_FRAMEWORK = {
+    'EXCEPTION_HANDLER': 'eshop.utils.custom_exception_handler.custom_exception_handler'
 }
 
 
