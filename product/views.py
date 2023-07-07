@@ -1,12 +1,12 @@
-from rest_framework.generics import get_object_or_404
+from .models import Product, ProductImages
 
-from .models import Product
-from product.api.serializers import ProductSerializer
+from product.api.serializers import ProductSerializer, ProductImagesSerializer
 from product.api.filters import ProductFilter
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.generics import get_object_or_404
 
 from rest_framework import status
 
@@ -32,8 +32,15 @@ def get_product_details(request, pk):
 
 
 @api_view(['POST'])
-def upload_product_images(request, pk):
+def upload_product_images(request):
     data = request.data
     files = request.FILES.getlist('images')
 
-    return Response({'success': 'image uploaded'})
+    images = []
+    for f in files:
+        image = ProductImages.objects.create(product=Product(data['product']), image=f)
+        images.append(image)
+
+    serializer = ProductImagesSerializer(images, many=True)
+
+    return Response({'uploaded': serializer.data}, status=status.HTTP_201_CREATED)
