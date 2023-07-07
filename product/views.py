@@ -29,3 +29,11 @@ def get_product_details(request, pk):
 
     serializer = ProductSerializer(queryset, many=False)
     return Response({'product': serializer.data}, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+def upload_product_images(request, pk):
+    data = request.data
+    files = request.FILES.getlist('images')
+
+    return Response({'success': 'image uploaded'})
