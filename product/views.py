@@ -32,6 +32,14 @@ def get_product_details(request, pk):
 
 
 @api_view(['POST'])
+def new_product(request):
+    data = request.data
+    product = Product.objects.create(**data)
+    serializer = ProductSerializer(product, many=False)
+    return Response({'product': serializer.data}, status=status.HTTP_201_CREATED)
+
+
+@api_view(['POST'])
 def upload_product_images(request):
     data = request.data
     files = request.FILES.getlist('images')
