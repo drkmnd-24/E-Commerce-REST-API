@@ -33,10 +33,12 @@ def get_product_details(request, pk):
 
 @api_view(['POST'])
 def new_product(request):
-    data = request.data
-    product = Product.objects.create(**data)
-    serializer = ProductSerializer(product, many=False)
-    return Response({'product': serializer.data}, status=status.HTTP_201_CREATED)
+    serializer = ProductSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response({'product': serializer.data}, status=status.HTTP_201_CREATED)
+    else:
+        return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['POST'])
