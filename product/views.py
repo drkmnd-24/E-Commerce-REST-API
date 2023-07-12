@@ -43,13 +43,24 @@ def new_product(request):
 
 @api_view(['PUT'])
 def update_product(request, pk):
-    queryset = Product.objects.get(pk=pk)
+    try:
+        queryset = Product.objects.get(pk=pk)
+    except Product.DoesNotExist:
+        return Response({'error': 'product does not exist'}, status=status.HTTP_404_NOT_FOUND)
+
     serializer = ProductSerializer(queryset, data=request.data)
     if serializer.is_valid():
         serializer.save()
         return Response({'product': serializer.data}, status=status.HTTP_200_OK)
     else:
         return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['DELETE'])
+def delete_product(request, pk):
+    queryset = Product.objects.get(pk=pk)
+    queryset.delete()
+    return Response({'delete': 'product has been deleted'}, status=status.HTTP_204_NO_CONTENT)
 
 
 @api_view(['POST'])
