@@ -41,6 +41,17 @@ def new_product(request):
         return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 
+@api_view(['PUT'])
+def update_product(request, pk):
+    queryset = Product.objects.get(pk=pk)
+    serializer = ProductSerializer(queryset, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response({'product': serializer.data}, status=status.HTTP_200_OK)
+    else:
+        return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+
 @api_view(['POST'])
 def upload_product_images(request):
     data = request.data
