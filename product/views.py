@@ -59,6 +59,11 @@ def update_product(request, pk):
 @api_view(['DELETE'])
 def delete_product(request, pk):
     queryset = Product.objects.get(pk=pk)
+    args = {'product': pk}
+    images = ProductImages.objects.filter(**args)
+    for i in images:
+        i.delete()
+
     queryset.delete()
     return Response({'delete': 'product has been deleted'}, status=status.HTTP_204_NO_CONTENT)
 
