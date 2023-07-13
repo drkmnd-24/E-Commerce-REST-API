@@ -1,7 +1,7 @@
 from .models import Product, ProductImages
 
-from product.api.serializers import ProductSerializer, ProductImagesSerializer
-from product.api.filters import ProductFilter
+from api.serializers import ProductSerializer, ProductImagesSerializer
+from api.filters import ProductFilter
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
